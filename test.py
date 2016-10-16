@@ -48,12 +48,40 @@ def resize(imagePath, width, height):
         xPos = xPos + 1 #Increment X position by 1
 
     cv2.imshow("opencv",blankImage)
+    return blankImage;
+
+def blend(image1, image2, ratio):
+    blankImage = np.zeros((img1.shape[0], img1.shape[1],3), np.uint8)
+    
+    xPos, yPos = 0, 0
+    while xPos <  img1.shape[1]: #Loop through rows
+        while yPos < img1.shape[0]: #Loop through collumns
+            valR = int(image1.item(yPos, xPos,2)*ratio + image2.item(yPos, xPos,2)*(1-ratio))
+            valG = int(image1.item(yPos, xPos,1)*ratio + image2.item(yPos, xPos,1)*(1-ratio))
+            valB = int(image1.item(yPos, xPos,0)*ratio + image2.item(yPos, xPos,0)*(1-ratio))
+            blankImage.itemset((yPos, xPos, 0), valB) #Set B to val
+            blankImage.itemset((yPos, xPos, 1), valG) #Set G to val
+            blankImage.itemset((yPos, xPos, 2), valR) #Set R to val
+
+            yPos = yPos + 1 #Increment Y position by 1
+
+        yPos = 0
+        xPos = xPos + 1 #Increment X position by 1
+
+    cv2.imshow("opencv",blankImage)
 
 
 
+
+
+##### Question 1 ######
 # threashold("images/L1.jpg", "images/L1_output.jpg", 2**20)
 # cv2.imshow("opencv",cv2.imread("images/L1_output.jpg"))
 
-resize("images/logo.jpg", 669, 325)
+
+##### Question 2 ######
+img1 = cv2.imread("images/L1.jpg")
+img2 = resize("images/logo.jpg", img1.shape[1], img1.shape[0])
+blend(img1, img2, .2)
 
 cv2.waitKey(0)
