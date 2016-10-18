@@ -136,11 +136,17 @@ def applyMatrix(image, matrix):
     cv2.imshow("opencv",blankImage)
 
     return 1
+# m = np.matrix('0, 0, 1; 1007 0 1; 1007 696 1; 0 696 1; 0 348 1')
+# o = np.matrix('0, 0, 1; 995 135 1; 922 684, 1;64 466 1;30 240 1 ')
 
-m = np.matrix('1007 0 1; 1007 696 1; 0 0 1')
-o = np.matrix('995 135 1; 922 684, 1; 0 0 1')
+m = np.matrix('0, 0, 1; 1007 0 1; 1007 696 1;')
+o = np.matrix('0, 0, 1; 995 135 1; 922 684, 1;')
 
-matrix = solveAffine(m , o)
+# pts1 = np.float32([[50,50],[200,50],[50,200]])
+# pts2 = np.float32([[10,100],[200,50],[100,250]])
+# m = cv2.getAffineTransform(pts1,pts2)
+
+matrix = solveAffine(o, m)
 image = cv2.imread("images/L3.jpg")
 applyMatrix(image, matrix   )
 cv2.waitKey(0)
