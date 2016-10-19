@@ -120,7 +120,7 @@ def applyMatrix(image, matrix):
             # # print(math.ceil(newPos[0,0]),math.floor(newPos[0,0]), math.ceil(newPos[1,0]),math.floor(newPos[1,0]))
             posX = max(0, min(math.floor(newPos[0,0]) , image.shape[1]-1))#696.11 1006 
             posY = max(0, min(math.floor(newPos[1,0]) , image.shape[0]-1)) #695
-            print(posX, posY, xPos,yPos, image.shape[1]-1, newPos[0,0], image.shape[0]-1, newPos[1 ,0])
+            # print(posX, posY, xPos,yPos, image.shape[1]-1, newPos[0,0], image.shape[0]-1, newPos[1 ,0])
             print(xPos)
             blankImage.itemset((yPos, xPos, 0), image[posY, posX, 0]) #Set B to val
             blankImage.itemset((yPos, xPos, 1), image[posY, posX, 1]) #Set G to val
@@ -136,20 +136,25 @@ def applyMatrix(image, matrix):
     cv2.imshow("opencv",blankImage)
 
     return 1
+
+
 # m = np.matrix('0, 0, 1; 1007 0 1; 1007 696 1; 0 696 1; 0 348 1')
 # o = np.matrix('0, 0, 1; 995 135 1; 922 684, 1;64 466 1;30 240 1 ')
 
-m = np.matrix('0, 0, 1; 1007 0 1; 1007 696 1;')
-o = np.matrix('0, 0, 1; 995 135 1; 922 684, 1;')
+src = np.float32([[54,54],[189,22],[186,147],[55,184]])
+dst = np.float32([[0,0],[138,0],[138,128],[0, 128]])
 
-# pts1 = np.float32([[50,50],[200,50],[50,200]])
-# pts2 = np.float32([[10,100],[200,50],[100,250]])
-# m = cv2.getAffineTransform(pts1,pts2)
+image = cv2.imread("images/L4.jpg")
 
-matrix = solveAffine(o, m)
-image = cv2.imread("images/L3.jpg")
-applyMatrix(image, matrix   )
+res,status = cv2.findHomography(src, dst)
+im_out = cv2.warpPerspective(image, res, (138,128))
+cv2.imshow("opencv",im_out)
+print(res)
+# cv2.getAffineTransform(pts1,pts2)
+
+
 cv2.waitKey(0)
+
 
 ##### Question 1 ######
 # threashold("images/L1.jpg", "images/L1_output.jpg", 2**20)
@@ -163,3 +168,17 @@ cv2.waitKey(0)
 
 ##### Question 3 ######
 # increase_brightness(cv2.imread("images/L1.jpg"), 50)
+
+### Question 4 ######
+
+# m = np.matrix('0, 0, 1; 1007 0 1; 1007 696 1')
+# o = np.matrix('0, 0, 1; 995 135 1; 922 684, 1')
+
+# matrix = solveAffine(o, m)
+# image = cv2.imread("images/L3.jpg")
+
+
+# matrix = solveAffine(o, m)
+# applyMatrix(image, matrix)
+
+### Question 4 ######
