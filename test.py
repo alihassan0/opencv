@@ -138,22 +138,6 @@ def applyMatrix(image, matrix):
     return 1
 
 
-# m = np.matrix('0, 0, 1; 1007 0 1; 1007 696 1; 0 696 1; 0 348 1')
-# o = np.matrix('0, 0, 1; 995 135 1; 922 684, 1;64 466 1;30 240 1 ')
-
-src = np.float32([[54,54],[189,22],[186,147],[55,184]])
-dst = np.float32([[0,0],[138,0],[138,128],[0, 128]])
-
-image = cv2.imread("images/L4.jpg")
-
-res,status = cv2.findHomography(src, dst)
-im_out = cv2.warpPerspective(image, res, (138,128))
-cv2.imshow("opencv",im_out)
-print(res)
-# cv2.getAffineTransform(pts1,pts2)
-
-
-cv2.waitKey(0)
 
 
 ##### Question 1 ######
@@ -181,4 +165,21 @@ cv2.waitKey(0)
 # matrix = solveAffine(o, m)
 # applyMatrix(image, matrix)
 
-### Question 4 ######
+### Question 5 ######
+
+# src = np.float32([[54,54],[189,22],[186,147],[55,184]])
+# dst = np.float32([[0,0],[138,0],[138,128],[0, 128]])
+
+# image = cv2.imread("images/L4.jpg")
+
+# res,status = cv2.findHomography(src, dst)
+# im_out = cv2.warpPerspective(image, res, (138,128))
+# cv2.imshow("opencv",im_out)
+# print(res)
+
+
+# m = np.matrix('0, 0, 1; 1007 0 1; 1007 696 1; 0 696 1; 0 348 1')
+# o = np.matrix('0, 0, 1; 995 135 1; 922 684, 1;64 466 1;30 240 1 ')
+
+
+cv2.waitKey(0)
