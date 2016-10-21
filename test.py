@@ -25,9 +25,9 @@ def threashold( src, dist, breakPoint):
     cv2.imwrite(dist, img) #Write image to file
     return;
 
-def resize(imagePath, width, height):
+def resize(src, width, height):
     blankImage = np.zeros((height,width,3), np.uint8)
-    sourceImage = cv2.imread(imagePath)
+    sourceImage = cv2.imread(src)
     
     xPos, yPos = 0, 0
     while xPos < width: #Loop through rows
@@ -55,7 +55,7 @@ def blend(image1, image2, ratio):
     
     xPos, yPos = 0, 0
     while xPos <  image1.shape[1]: #Loop through rows
-        while yPos < image1.shape[0]: #Loop through collumns
+        while yPos < image1.shape[0]: #Loop through columns
             valR = int(image1.item(yPos, xPos,2)*ratio + image2.item(yPos, xPos,2)*(1-ratio))
             valG = int(image1.item(yPos, xPos,1)*ratio + image2.item(yPos, xPos,1)*(1-ratio))
             valB = int(image1.item(yPos, xPos,0)*ratio + image2.item(yPos, xPos,0)*(1-ratio))
@@ -75,17 +75,16 @@ def blend(image1, image2, ratio):
 
 
 
-def increase_brightness(image, percent):
+def increase_brightness(src, percent):
+    image = cv2.imread(src)
     blankImage = np.zeros((image.shape[0], image.shape[1],3), np.uint8)
     xPos, yPos = 0, 0
+    percent = 1+percent/100.0
     while xPos <  image.shape[1]: #Loop through rows
         while yPos < image.shape[0]: #Loop through collumns
-            r = image.item(yPos, xPos,2)
-            g = image.item(yPos, xPos,1)
-            b = image.item(yPos, xPos,0)
-            r = int(256 + r + (256 - r) * percent / 100.0)%256
-            g = int(256 + g + (256 - g) * percent / 100.0)%256
-            b = int(256 + b + (256 - b) * percent / 100.0)%256
+            r = max(0, min(image.item(yPos, xPos,2) * percent , 255))
+            g = max(0, min(image.item(yPos, xPos,1) * percent , 255))
+            b = max(0, min(image.item(yPos, xPos,0) * percent , 255))
             blankImage.itemset((yPos, xPos, 0), b) #Set B to val
             blankImage.itemset((yPos, xPos, 1), g) #Set G to val
             blankImage.itemset((yPos, xPos, 2), r) #Set R to val
@@ -97,8 +96,7 @@ def increase_brightness(image, percent):
 
     cv2.imshow("opencv",blankImage)
 
-
-    return;
+    return blankImage;
 
 def solveAffine( m,o):
     oInv = np.linalg.inv(o) 
@@ -108,7 +106,8 @@ def solveAffine( m,o):
     a = np.concatenate((a1, a2, a3))
     return a
 
-def applyMatrix(image, matrix):
+def applyMatrix(src, matrix):
+    image = cv2.imread(src)
     blankImage = np.zeros((image.shape[0], image.shape[1],3), np.uint8)
     
     xPos, yPos = 0, 0
@@ -121,8 +120,19 @@ def applyMatrix(image, matrix):
             posX = max(0, min(math.floor(newPos[0,0]) , image.shape[1]-1))#696.11 1006 
             posY = max(0, min(math.floor(newPos[1,0]) , image.shape[0]-1)) #695
             # print(posX, posY, xPos,yPos, image.shape[1]-1, newPos[0,0], image.shape[0]-1, newPos[1 ,0])
-            print(xPos)
-            blankImage.itemset((yPos, xPos, 0), image[posY, posX, 0]) #Set B to val
+            if xPos == 0 and yPos == 0:
+                print(posX, posY, image[posY, posX])
+            
+            if xPos == 1006 and yPos == 0:
+                print(posX, posY, image[posY, posX])
+            
+            if xPos == 1006 and yPos == 695:
+                print(posX, posY, image[posY, posX])
+            
+            if xPos == 500 and yPos == 500:
+                print(posX, posY, image[posY, posX])
+            
+            blankImage.itemset((yPos, xPos, 0), image[posY, posX]) #Set B to val
             blankImage.itemset((yPos, xPos, 1), image[posY, posX, 1]) #Set G to val
             blankImage.itemset((yPos, xPos, 2), image[posY, posX, 2]) #Set R to val
 
@@ -140,18 +150,17 @@ def applyMatrix(image, matrix):
 
 
 
-##### Question 1 ######
-# threashold("images/L1.jpg", "images/L1_output.jpg", 2**20)
+# ##### Question 1 ######
+# threashold("images/L1.jpg", "images/L1_output.jpg", 2**22)
 # cv2.imshow("opencv",cv2.imread("images/L1_output.jpg"))
-# print("asd")
 
 #### Question 2 ######
-# img1 = cv2.imread("images/L1.jpg")
+# img1 = cv2.imread("images/L2.jpg")
 # img2 = resize("images/logo.jpg", img1.shape[1], img1.shape[0])
-# blend(img1, img2, .2)
+# blend(img1, img2, .8)
 
 ##### Question 3 ######
-# increase_brightness(cv2.imread("images/L1.jpg"), 50)
+cv2.imwrite("images/L2_output_3.jpg", increase_brightness("images/L2.jpg", 50))
 
 ### Question 4 ######
 
@@ -159,11 +168,8 @@ def applyMatrix(image, matrix):
 # o = np.matrix('0, 0, 1; 995 135 1; 922 684, 1')
 
 # matrix = solveAffine(o, m)
-# image = cv2.imread("images/L3.jpg")
 
-
-# matrix = solveAffine(o, m)
-# applyMatrix(image, matrix)
+# applyMatrix("images/L3.jpg", matrix)
 
 ### Question 5 ######
 
