@@ -108,6 +108,7 @@ def solveAffine( m,o):
 
 def applyMatrix(src, matrix):
     image = cv2.imread(src)
+    
     blankImage = np.zeros((image.shape[0], image.shape[1],3), np.uint8)
     
     xPos, yPos = 0, 0
@@ -120,21 +121,11 @@ def applyMatrix(src, matrix):
             posX = max(0, min(math.floor(newPos[0,0]) , image.shape[1]-1))#696.11 1006 
             posY = max(0, min(math.floor(newPos[1,0]) , image.shape[0]-1)) #695
             # print(posX, posY, xPos,yPos, image.shape[1]-1, newPos[0,0], image.shape[0]-1, newPos[1 ,0])
-            if xPos == 0 and yPos == 0:
-                print(posX, posY, image[posY, posX])
+
             
-            if xPos == 1006 and yPos == 0:
-                print(posX, posY, image[posY, posX])
-            
-            if xPos == 1006 and yPos == 695:
-                print(posX, posY, image[posY, posX])
-            
-            if xPos == 500 and yPos == 500:
-                print(posX, posY, image[posY, posX])
-            
-            blankImage.itemset((yPos, xPos, 0), image[posY, posX]) #Set B to val
-            blankImage.itemset((yPos, xPos, 1), image[posY, posX, 1]) #Set G to val
-            blankImage.itemset((yPos, xPos, 2), image[posY, posX, 2]) #Set R to val
+            blankImage.itemset((yPos, xPos, 0), image[int(posY), int(posX), 0]) #Set B to val
+            blankImage.itemset((yPos, xPos, 1), image[int(posY), int(posX), 1]) #Set G to val
+            blankImage.itemset((yPos, xPos, 2), image[int(posY), int(posX), 2]) #Set R to val
 
             yPos = yPos + 1 #Increment Y position by 1
 
@@ -145,7 +136,7 @@ def applyMatrix(src, matrix):
     cv2.imwrite("images/L4_output.jpg", blankImage)
     cv2.imshow("opencv",blankImage)
 
-    return 1
+    return blankImage
 
 
 
@@ -160,7 +151,7 @@ def applyMatrix(src, matrix):
 # blend(img1, img2, .8)
 
 ##### Question 3 ######
-cv2.imwrite("images/L2_output_3.jpg", increase_brightness("images/L2.jpg", 50))
+# cv2.imwrite("images/L2_output_3.jpg", increase_brightness("images/L2.jpg", 50))
 
 ### Question 4 ######
 
@@ -168,8 +159,37 @@ cv2.imwrite("images/L2_output_3.jpg", increase_brightness("images/L2.jpg", 50))
 # o = np.matrix('0, 0, 1; 995 135 1; 922 684, 1')
 
 # matrix = solveAffine(o, m)
+# image1 = applyMatrix("images/L3.jpg", matrix)
 
-# applyMatrix("images/L3.jpg", matrix)
+
+# m = np.matrix('0, 0, 1; 0 696 1; 1007 696 1')
+# o = np.matrix('0, 0, 1; 125 577 1; 1007 696, 1')
+
+# matrix = solveAffine(o, m)
+# image2 = applyMatrix("images/L4_output.jpg", matrix)
+
+
+# blankImage = np.zeros((image1.shape[0], image1.shape[1],3), np.uint8)    
+# xPos, yPos = 0, 0
+# while xPos <  image1.shape[1]: #Loop through rows
+#     while yPos < image1.shape[0]: #Loop through collumns
+#         if yPos < xPos* (image1.shape[0]*1.0/image1.shape[1]) :
+#             image = image1
+#         else :
+#             image = image2 
+#         r = image.item(yPos, xPos,2)
+#         g = image.item(yPos, xPos,1)
+#         b = image.item(yPos, xPos,0)
+#         blankImage.itemset((yPos, xPos, 0), b) #Set B to val
+#         blankImage.itemset((yPos, xPos, 1), g) #Set G to val
+#         blankImage.itemset((yPos, xPos, 2), r) #Set R to val
+
+#         yPos = yPos + 1 #Increment Y position by 1
+
+#     yPos = 0
+#     xPos = xPos + 1 #Increment X position by 1
+# cv2.imshow("opencv",blankImage)
+# cv2.imwrite("images/L4_final.jpg", blankImage)
 
 ### Question 5 ######
 
@@ -181,11 +201,6 @@ cv2.imwrite("images/L2_output_3.jpg", increase_brightness("images/L2.jpg", 50))
 # res,status = cv2.findHomography(src, dst)
 # im_out = cv2.warpPerspective(image, res, (138,128))
 # cv2.imshow("opencv",im_out)
-# print(res)
-
-
-# m = np.matrix('0, 0, 1; 1007 0 1; 1007 696 1; 0 696 1; 0 348 1')
-# o = np.matrix('0, 0, 1; 995 135 1; 922 684, 1;64 466 1;30 240 1 ')
-
-
+# cv2.imwrite("images/L5_output.jpg", im_out)
+    
 cv2.waitKey(0)
